@@ -3,10 +3,6 @@ package test.myapplication;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-/**
- * Created by Comarch on 2018-06-06.
- */
-
 public class MainThread extends Thread {
 
     private SurfaceHolder surfaceHolder;
@@ -75,5 +71,9 @@ public class MainThread extends Thread {
 
     public void setRunning(boolean running) {
         this.running = running;
+    }
+
+    public static Canvas getCanvas() {
+        return canvas;
     }
 }

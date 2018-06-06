@@ -12,7 +12,9 @@ import android.view.SurfaceView;
 class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
-    private CharacterSprite characterSprite;
+    //private CharacterSprite characterSprite;
+    private Road road;
+    private Car car;
 
     public GameView(Context context) {
         super(context);
@@ -26,8 +28,9 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(), R.drawable.pikachu));
-
+        // characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(), R.drawable.pikachu));
+        road = new Road();
+        car = new Car();
         thread.setRunning(true);
         thread.start();
 
@@ -54,7 +57,8 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-            characterSprite.update();
+            //characterSprite.update();
+            road.update();
     }
 
     @Override
@@ -65,15 +69,19 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
             Paint paint = new Paint();
             paint.setColor(Color.rgb(250, 0, 0));
             canvas.drawRect(100, 100, 200, 200, paint);*/
-            characterSprite.draw(canvas);
+            road.draw(canvas);
+            car.draw(canvas);
+
+           // characterSprite.draw(canvas);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        characterSprite.setY((int) event.getY());
+  /*      characterSprite.setY((int) event.getY());
         characterSprite.setX((int) event.getX());
-
+*/
+        car.move((int) event.getX(), thread.getCanvas());
         return super.onTouchEvent(event);
     }
 }
