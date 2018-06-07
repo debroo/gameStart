@@ -107,8 +107,17 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText("Points: " + points, 50, 60, paint);
         canvas.drawText("Record: " + maxPoints, 500, 60, paint);
         paint.setColor(Color.WHITE);
-        for (ObstacleObject obj : obstacles.obstaclesList) {
+     /*   for (ObstacleObject obj : obstacles.obstaclesList) {
             if (obj.getPos() == car.getCarPosition() && car.getY() < obj.getY() && obj.getY() < car.getY() + car.getHeight()) {
+                System.out.println("colision");
+                canvas.drawText("Collision", 200, 450, paint);
+                points = 0;
+                speed = 10;
+            }
+        }*/
+
+        for (ObstacleObject obj : obstacles.obstaclesList) {
+            if (car.getY() < obj.getY() && obj.getY() < car.getY() + car.getHeight() && car.getX() < obj.getX() && obj.getX() < car.getX() + car.getWidth() ) {
                 System.out.println("colision");
                 canvas.drawText("Collision", 200, 450, paint);
                 points = 0;
