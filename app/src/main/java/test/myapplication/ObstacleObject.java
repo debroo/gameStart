@@ -1,17 +1,21 @@
 package test.myapplication;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import java.util.Random;
 
 class ObstacleObject {
     public int y;
     public int x;
-    public int width = 50;
-    public int height = 100;
+    public int width = 150;
+    public int height = 284;
     public int pos = 0;
+    private Rect obstacleRect;
+    private Bitmap obstacleImage;
 
     public int getPos() {
         return pos;
@@ -34,9 +38,10 @@ class ObstacleObject {
     }
 
 
-    public ObstacleObject(int y, int pos) {
+    public ObstacleObject(int y, int pos, Bitmap obstacleImage) {
         this.y = y;
         this.pos = pos;
+        this.obstacleImage = obstacleImage;
     }
 
     public void keepTrack(Canvas canvas) {
@@ -58,6 +63,12 @@ class ObstacleObject {
             this.x = canvas.getWidth() - canvas.getWidth() / 3 / 2 - width / 2;
         }
 
-        canvas.drawRect(x, y, x + width, y + height, paint);
+        //canvas.drawRect(x, y, x + width, y + height, paint);
+        obstacleRect = new Rect(x, y, x + width, y + height);
+        canvas.drawBitmap(obstacleImage, null, obstacleRect, paint);
+    }
+
+    public Rect getObstacleRect() {
+        return obstacleRect;
     }
 }

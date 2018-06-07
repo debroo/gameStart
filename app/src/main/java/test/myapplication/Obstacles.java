@@ -1,6 +1,7 @@
 package test.myapplication;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,17 +12,19 @@ import java.util.Random;
 public class Obstacles {
     int y = 0;
     ArrayList<ObstacleObject> obstaclesList = new ArrayList<>();
-    int speed = 10;
+    int speed = 30;
 
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    public Obstacles() {
-        int countOfRows = 5;
+    public Obstacles(Bitmap obstacleImage) {
+        int countOfRows = 4;
+
+
         for (int i = 0; i <= countOfRows; i++) {
             int pos = new Random().nextInt(3) + 1;
-            obstaclesList.add(new ObstacleObject( i * 300, pos));
+            obstaclesList.add(new ObstacleObject( i * 500, pos, obstacleImage));
         }
     }
 
