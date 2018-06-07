@@ -47,4 +47,24 @@ public class Car {
         this.lastX = x;
         System.out.println("move to :" + x);
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getCarPosition() {
+        return carPosition;
+    }
 }

@@ -9,12 +9,18 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
     //private CharacterSprite characterSprite;
     private Road road;
     private Car car;
+    private Obstacles obstacles;
+    private int points = 0;
+    private int maxPoints = 0;
+    private int speed = 5;
 
     public GameView(Context context) {
         super(context);
@@ -31,6 +37,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(), R.drawable.pikachu));
         road = new Road();
         car = new Car();
+        obstacles = new Obstacles();
         thread.setRunning(true);
         thread.start();
 
@@ -57,8 +64,8 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-            //characterSprite.update();
-            road.update();
+        //characterSprite.update();
+        road.update();
     }
 
     @Override
@@ -70,9 +77,16 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
             paint.setColor(Color.rgb(250, 0, 0));
             canvas.drawRect(100, 100, 200, 200, paint);*/
             road.draw(canvas);
+            obstacles.draw(canvas);
             car.draw(canvas);
+            points++;
+            if (points > maxPoints) maxPoints = points;
+            checkCollision(car, obstacles, canvas);
+            speed++;
+            road.setSpeed(speed/50);
+            obstacles.setSpeed(speed/50);
 
-           // characterSprite.draw(canvas);
+            // characterSprite.draw(canvas);
         }
     }
 
@@ -83,5 +97,23 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
 */
         car.move((int) event.getX(), thread.getCanvas());
         return super.onTouchEvent(event);
+    }
+
+    public void checkCollision(Car car, Obstacles obstacles, Canvas canvas) {
+        Paint paint = new Paint();
+
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(20 * getResources().getDisplayMetrics().density);
+        canvas.drawText("Points: " + points, 50, 60, paint);
+        canvas.drawText("Record: " + maxPoints, 500, 60, paint);
+        paint.setColor(Color.WHITE);
+        for (ObstacleObject obj : obstacles.obstaclesList) {
+            if (obj.getPos() == car.getCarPosition() && car.getY() < obj.getY() && obj.getY() < car.getY() + car.getHeight()) {
+                System.out.println("colision");
+                canvas.drawText("Collision", 200, 450, paint);
+                points = 0;
+                speed = 10;
+            }
+        }
     }
 }

@@ -11,6 +11,11 @@ public class Road {
     int y = 0;
     ArrayList<Bar> bars = new ArrayList<>();
 
+    int speed = 10;
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
 
     public Road() {
 
@@ -29,7 +34,7 @@ public class Road {
         for( Bar bar : bars) {
             bar.keepTrack(canvas);
             bar.draw(canvas,paint);
-            bar.y = bar.y + 10;
+            bar.y = bar.y + speed;
         }
 
 
@@ -41,6 +46,10 @@ public class Road {
     }
 
     public void update() {
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     class Bar {
