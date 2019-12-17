@@ -24,10 +24,12 @@ public class Car {
     int lastX = 0;
     private DisplayMetrics metrics;
     private Bitmap carImage;
+    private int speed;
     private Rect carRectangle;
 
-    public Car(Bitmap carImage) {
+    public Car(Bitmap carImage, int speed) {
         this.carImage = carImage;
+        this.speed = speed;
     }
 
     public void draw(Canvas canvas, DisplayMetrics metrics) {
@@ -68,11 +70,11 @@ public class Car {
     private void MoveCar(int destX) {
         if (x != destX) {
             if (x > destX) {
-                for (int i = 0 ; i < 15; i++) {
+                for (int i = 0 ; i < 20; i++) {
                     this.x--;
                 }
             } else {
-                for (int i = 0 ; i < 15; i++) {
+                for (int i = 0 ; i < 20; i++) {
                     this.x++;
                 }
             }

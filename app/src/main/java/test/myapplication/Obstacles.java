@@ -13,6 +13,15 @@ public class Obstacles {
     int y = 0;
     ArrayList<ObstacleObject> obstaclesList = new ArrayList<>();
     int speed = 30;
+    int lastR = 0;
+
+    public int getLastR() {
+        return lastR;
+    }
+
+    public void setLastR(int lastR) {
+        this.lastR = lastR;
+    }
 
     public void setSpeed(int speed) {
         this.speed = speed;
@@ -24,17 +33,25 @@ public class Obstacles {
 
         for (int i = 0; i <= countOfRows; i++) {
             int pos = new Random().nextInt(3) + 1;
-            obstaclesList.add(new ObstacleObject( i * 500, pos, obstacleImage));
+            obstaclesList.add(new ObstacleObject( i * 800, pos, obstacleImage, this));
         }
     }
+
+
+
+
+
 
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
 
+        ObstacleObject prevCar = null;
+        this.lastR = this.lastR + speed;
         for( ObstacleObject bar : obstaclesList) {
-            bar.keepTrack(canvas);
-            bar.draw(canvas,paint);
-            bar.y = bar.y + speed;
+
+            bar.keepTrack(canvas, speed);
+            bar.draw(canvas,paint, speed);
+            prevCar = bar;
         }
 
 

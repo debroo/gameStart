@@ -9,13 +9,15 @@ import android.graphics.Rect;
 import java.util.Random;
 
 class ObstacleObject {
-    public int y;
+    public int y = -284;
     public int x;
     public int width = 150;
     public int height = 284;
     public int pos = 0;
     private Rect obstacleRect;
     private Bitmap obstacleImage;
+    int cycle = 0;
+    Obstacles parent;
 
     public int getPos() {
         return pos;
@@ -38,20 +40,26 @@ class ObstacleObject {
     }
 
 
-    public ObstacleObject(int y, int pos, Bitmap obstacleImage) {
+    public ObstacleObject(int y, int pos, Bitmap obstacleImage, Obstacles obstacles) {
         this.y = y;
         this.pos = pos;
         this.obstacleImage = obstacleImage;
+        int height = 0;
+        this.parent = obstacles;
+
     }
 
-    public void keepTrack(Canvas canvas) {
-        if (y > canvas.getHeight() - 100) {
-            y = -100;
-            this.pos =  new Random().nextInt(3) + 1;
+    public void keepTrack(Canvas canvas, int speed) {
+        if (y > canvas.getHeight()) {
+            if (this.parent.getLastR() > 800) {
+                y = -284;
+                this.pos = new Random().nextInt(3) + 1;
+                this.parent.setLastR(0);
+            }
         }
     }
 
-    public void draw(Canvas canvas, Paint paint) {
+    public void draw(Canvas canvas, Paint paint, int speed) {
         paint.setColor(Color.GREEN);
 
 
@@ -66,6 +74,8 @@ class ObstacleObject {
         //canvas.drawRect(x, y, x + width, y + height, paint);
         obstacleRect = new Rect(x, y, x + width, y + height);
         canvas.drawBitmap(obstacleImage, null, obstacleRect, paint);
+
+        y = y + speed;
     }
 
     public Rect getObstacleRect() {

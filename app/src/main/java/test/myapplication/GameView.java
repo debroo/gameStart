@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.support.constraint.solver.widgets.Rectangle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -22,7 +23,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Obstacles obstacles;
     private int points = 0;
     private int maxPoints = 0;
-    private int speed = 5;
+    private int speed = 100;
     private DisplayMetrics metrics;
 
     public DisplayMetrics getMetrics() {
@@ -45,7 +46,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap carImage = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         Bitmap obstacleImage = BitmapFactory.decodeResource(getResources(), R.drawable.obstaclecar);
         road = new Road(roadImage);
-        car = new Car(carImage);
+        car = new Car(carImage, speed);
         obstacles = new Obstacles(obstacleImage);
         thread.setRunning(true);
         thread.start();
@@ -124,14 +125,20 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 speed = 10;
             }
         }*/
-
+        Rect copyCar = new Rect(car.getCarRectangle());
+        copyCar.right -= 10;
+        copyCar.left -= 10;
+        copyCar.top -= 5;
+        copyCar.bottom -= 5;
         for (ObstacleObject obj : obstacles.obstaclesList) {
-
-            if (car.getCarRectangle().intersect(obj.getObstacleRect())) {
+            Rect copyObh = new Rect(obj.getObstacleRect());
+            copyObh.left -= 5;
+            copyObh.right -= 5;
+            if (copyCar.intersect(copyObh)) {
                 System.out.println("colision");
                 canvas.drawText("Collision", 200, 450, paint);
                 points = 0;
-                speed = 10;
+                speed = 100;
             }
         }
     }
