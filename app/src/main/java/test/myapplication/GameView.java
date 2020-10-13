@@ -1,15 +1,18 @@
 package test.myapplication;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.support.constraint.solver.widgets.Rectangle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import java.util.ArrayList;
 
 class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -20,11 +23,16 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Obstacles obstacles;
     private int points = 0;
     private int maxPoints = 0;
-    private int speed = 5;
+    private int speed = 100;
+    private DisplayMetrics metrics;
 
-    public GameView(Context context) {
+    public DisplayMetrics getMetrics() {
+        return metrics;
+    }
+
+    public GameView(Context context, DisplayMetrics metrics) {
         super(context);
-
+        this.metrics = metrics;
         getHolder().addCallback(this);
 
         thread = new MainThread(getHolder(), this);
@@ -34,10 +42,12 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        // characterSprite = new CharacterSprite(BitmapFactory.decodeResource(getResources(), R.drawable.pikachu));
-        road = new Road();
-        car = new Car();
-        obstacles = new Obstacles();
+        Bitmap roadImage = BitmapFactory.decodeResource(getResources(), R.drawable.roadimg);
+        Bitmap carImage = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+        Bitmap obstacleImage = BitmapFactory.decodeResource(getResources(), R.drawable.obstaclecar);
+        road = new Road(roadImage);
+        car = new Car(carImage, speed);
+        obstacles = new Obstacles(obstacleImage);
         thread.setRunning(true);
         thread.start();
 
@@ -78,13 +88,13 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawRect(100, 100, 200, 200, paint);*/
             road.draw(canvas);
             obstacles.draw(canvas);
-            car.draw(canvas);
+            car.draw(canvas, metrics);
             points++;
             if (points > maxPoints) maxPoints = points;
             checkCollision(car, obstacles, canvas);
             speed++;
-            road.setSpeed(speed/50);
-            obstacles.setSpeed(speed/50);
+            road.setSpeed(speed / 50);
+            obstacles.setSpeed(speed / 50);
 
             // characterSprite.draw(canvas);
         }
@@ -95,7 +105,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
   /*      characterSprite.setY((int) event.getY());
         characterSprite.setX((int) event.getX());
 */
-        car.move((int) event.getX(), thread.getCanvas());
+        car.move((int) event.getX());
         return super.onTouchEvent(event);
     }
 
@@ -115,14 +125,22 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 speed = 10;
             }
         }*/
-
+        Rect copyCar = new Rect(car.getCarRectangle());
+        copyCar.right -= 10;
+        copyCar.left -= 10;
+        copyCar.top -= 5;
+        copyCar.bottom -= 5;
         for (ObstacleObject obj : obstacles.obstaclesList) {
-            if (car.getY() < obj.getY() && obj.getY() < car.getY() + car.getHeight() && car.getX() < obj.getX() && obj.getX() < car.getX() + car.getWidth() ) {
+            Rect copyObh = new Rect(obj.getObstacleRect());
+            copyObh.left -= 5;
+            copyObh.right -= 5;
+            if (copyCar.intersect(copyObh)) {
                 System.out.println("colision");
                 canvas.drawText("Collision", 200, 450, paint);
                 points = 0;
-                speed = 10;
+                speed = 100;
             }
         }
     }
+
 }
